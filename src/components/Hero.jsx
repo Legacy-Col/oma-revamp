@@ -1,13 +1,14 @@
 import { Box, Button } from '@mui/material';
 import React from 'react'
-import CourtImg from '../assets/Courthouse.jpg'
+import courtImg from '../assets/Courthouse.jpg'
 
 
 const Hero = () => {
   return (
     <div
       className="h-screen relative bg-cover bg-center "
-      style={{ backgroundImage: `url (${CourtImg})` }}    >
+      style={{ backgroundImage: `url(${courtImg})` }}
+    >
       <section className="absolute inset-0 bg-black bg-opacity-65 flex items-center justify-center">
         <div className="text-center text-white p-4">
           <h1 className="text-4xl md:text-6xl font-bold my-24">
