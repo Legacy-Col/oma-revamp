@@ -1,3 +1,4 @@
+import React from "react";
 import {
   AppBar,
   Box,
@@ -12,40 +13,19 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useState } from "react";
-import { motion, AnimatePresence, color } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import scaleImg from "../assets/Laws Scale.png";
-import {Link, Links} from 'react-router-dom'
-import { path } from "framer-motion/client";
 
-
-const Navbar = () => {
+const Navbar = ({ scrollToSection, sections }) => {
   const [mobileMenu, setMobileMenu] = useState(false);
-
-  const toggleDrawer = () => {
-    setMobileMenu(!mobileMenu);
-  };
+  const toggleDrawer = () => setMobileMenu(!mobileMenu);
 
   const navLinks = [
-    {
-      name: "Home",
-      path: "/",
-    },
-    {
-      name: "About",
-      path: "/about",
-    },
-    {
-      name: "Services",
-      path: "/services",
-    },
-    {
-      name: "Reviews",
-      path: "/reviews",
-    },
-    {
-      name: "Contact Us",
-      path: "/contact"
-    },
+    { name: "Home", ref: sections.heroRef },
+    { name: "About", ref: sections.aboutRef },
+    { name: "Services", ref: sections.servicesRef },
+    { name: "Reviews", ref: sections.reviewsRef },
+    { name: "Contact Us", ref: sections.contactRef, isSpecial: true},
   ];
 
   return (
@@ -67,51 +47,48 @@ const Navbar = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1 }}
-              color="black"
             />
-          <Typography variant="h5" >Oma's Legal</Typography>
-          </IconButton>
-
-          {/* Desktop Navigation */}
-          <Box
-            sx={{
-              display: { xs: "none", md: "flex" },
-              flexGrow: 1,
-              justifyContent: "end",
-            }}
-            component={motion.div}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {navLinks.map(({ name, path }) => (
-              <Link to={path}>
-              <Button
-                key={name}
-                color="black"
-                sx={{
-                  mx: 2,
-                  ":hover": {
-                    // borderBottom: 2,
-                    color: "black",
-                    transition: "ease-out",
-                    backgroundColor: "skyblue",
-                    // boxShadow: 8,
-                    width: "10%",
-                  },
-                }}
-              >
-                {name}
-              </Button>
-              </Link>
-            ))}
-          </Box>
-
-          {/* Mobile Menu Button */}
-          <IconButton sx={{ display: { md: "none" } }} onClick={toggleDrawer}>
-            ☰
+          <Typography variant="h5">Oma's Legal</Typography>
           </IconButton>
         </Box>
+
+        {/* Desktop Navigation */}
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            flexGrow: 1,
+            justifyContent: "end",
+          }}
+          component={motion.div}
+        >
+          {navLinks.map(({ name, ref, isSpecial}) => (
+            <Button
+              key={name}
+              color="black"
+              sx={{
+                mx: 2, 
+                color: isSpecial ? "white" : "black",
+                backgroundColor: isSpecial ? "black" : "transparent",
+                borderRadius: isSpecial ? "20px" : "0px",
+                fontWeight: isSpecial ? "thin" : "normal",
+                padding: isSpecial ? "5px 15px" : "initial",
+                "&:hover": {
+                  backgroundColor: isSpecial ? "black" : "skyblue",
+                  scale: isSpecial ? 1.1 : 1.2,
+                  boxShadow: 4,
+                } 
+              }}
+              onClick={() => scrollToSection(ref)}
+            >
+              {name}
+            </Button>
+          ))}
+        </Box>
+
+        {/* Mobile Menu Button */}
+        <IconButton sx={{ display: { md: "none" } }} onClick={toggleDrawer}>
+          ☰
+        </IconButton>
       </Toolbar>
 
       {/* Mobile Drawer with Animation */}
@@ -124,18 +101,14 @@ const Navbar = () => {
               transition={{ type: "spring", stiffness: 100 }}
             >
               <List>
-                {navLinks.map(({name, path}) => (
-                  <ListItem
-                    key={name}
-                    component={motion.div}
-                    whileHover={{
-                      scale: 1.1,
-                      backgroundColor: "#f0f0f0",
-                      borderRadius: "8px",
-                    }}
-                    sx={{overflow: "hidden"}}
-                  >
-                    <ListItemButton onClick={toggleDrawer} component={Link} to={path}>
+                {navLinks.map(({ name, ref }) => (
+                  <ListItem key={name} component={motion.div}>
+                    <ListItemButton
+                      onClick={() => {
+                        toggleDrawer();
+                        scrollToSection(ref);
+                      }}
+                    >
                       <ListItemText primary={name} />
                     </ListItemButton>
                   </ListItem>
