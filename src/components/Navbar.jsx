@@ -10,11 +10,13 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  Hidden,
 } from "@mui/material";
 import { useState } from "react";
 import { motion, AnimatePresence, color } from "framer-motion";
 import scaleImg from "../assets/Laws Scale.png";
+import {Link, Links} from 'react-router-dom'
+import { path } from "framer-motion/client";
+
 
 const Navbar = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -23,7 +25,28 @@ const Navbar = () => {
     setMobileMenu(!mobileMenu);
   };
 
-  const navLinks = ["Home", "About", "Services", "Reviews", "Contact Us"];
+  const navLinks = [
+    {
+      name: "Home",
+      path: "/",
+    },
+    {
+      name: "About",
+      path: "/about",
+    },
+    {
+      name: "Services",
+      path: "/services",
+    },
+    {
+      name: "Reviews",
+      path: "/reviews",
+    },
+    {
+      name: "Contact Us",
+      path: "/contact"
+    },
+  ];
 
   return (
     <AppBar color="inherit" position="fixed" sx={{ height: 80 }}>
@@ -61,9 +84,10 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {navLinks.map((text) => (
+            {navLinks.map(({ name, path }) => (
+              <Link to={path}>
               <Button
-                key={text}
+                key={name}
                 color="black"
                 sx={{
                   mx: 2,
@@ -77,8 +101,9 @@ const Navbar = () => {
                   },
                 }}
               >
-                {text}
+                {name}
               </Button>
+              </Link>
             ))}
           </Box>
 
@@ -99,9 +124,9 @@ const Navbar = () => {
               transition={{ type: "spring", stiffness: 100 }}
             >
               <List>
-                {navLinks.map((text) => (
+                {navLinks.map(({name, path}) => (
                   <ListItem
-                    key={text}
+                    key={name}
                     component={motion.div}
                     whileHover={{
                       scale: 1.1,
@@ -110,8 +135,8 @@ const Navbar = () => {
                     }}
                     sx={{overflow: "hidden"}}
                   >
-                    <ListItemButton onClick={toggleDrawer}>
-                      <ListItemText primary={text} />
+                    <ListItemButton onClick={toggleDrawer} component={Link} to={path}>
+                      <ListItemText primary={name} />
                     </ListItemButton>
                   </ListItem>
                 ))}
